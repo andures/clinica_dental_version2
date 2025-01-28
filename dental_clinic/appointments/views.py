@@ -1,9 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from .forms import AppointmentForm
-from .models import Appointment
+from .forms import AppointmentForm , PatientForm
 from django.contrib.auth.decorators import login_required
+from .models import Patient
 
 # Create your views here.
 def home(request):
@@ -54,3 +54,45 @@ def Create_Appointment(request):
     else:
         form = AppointmentForm()
     return render(request, 'appointments/Create_Appointment.html', {'form': form})
+
+# create patients view
+@login_required
+def patients_list(request):
+    patients = Patient.objects.filter(dentist=request.user)
+    return render(request, 'appointments/patients_list.html', {'patients': patients})
+
+# create patient create view
+@login_required
+def patient_create(request):
+    if request.method == 'POST':
+        form = PatientForm(request.POST)
+        if form.is_valid():
+            patient = form.save(commit=False)
+            patient.dentist = request.user
+            patient.save()
+            return redirect('patients_list')
+    else:
+        form = PatientForm()
+    return render(request, 'appointments/patient_form.html', {'form': form})
+
+# create patient edit view
+@login_required
+def patient_edit(request, pk):
+    patient = get_object_or_404(Patient, pk=pk, dentist=request.user)
+    if request.method == 'POST':
+        form = PatientForm(request.POST, instance=patient)
+        if form.is_valid():
+            form.save()
+            return redirect('patients_list')
+    else:
+        form = PatientForm(instance=patient)
+    return render(request, 'appointments/patient_form.html', {'form': form})
+
+# create patient delete view
+@login_required
+def patient_delete(request, pk):
+    patient = get_object_or_404(Patient, pk=pk, dentist=request.user)
+    if request.method == 'POST':
+        patient.delete()
+        return redirect('patients_list')
+    return render(request, 'appointments/patient_confirm_delete.html', {'patient': patient})
