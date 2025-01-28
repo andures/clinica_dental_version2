@@ -1,0 +1,87 @@
+/* Hero Section */
+.hero {
+    background-color: #2d3748; /* Fondo gris oscuro */
+    color: white;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+.hero p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.hero a {
+    background-color: #48bb78; /* Verde para los botones de acción */
+    padding: 1rem 2rem;
+    border-radius: 0.375rem;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.hero a:hover {
+    background-color: #38a169; /* Verde más oscuro al pasar */
+}
+
+/* Service Cards */
+.card {
+    background-color: #2d3748; /* Fondo gris oscuro */
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card h3 {
+    color: #63b3ed; /* Azul para los títulos */
+}
+
+.card p {
+    color: #f7fafc; /* Blanco para el texto */
+}
+
+/* Testimonials */
+.testimonial {
+    background-color: #2d3748;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.testimonial p {
+    color: #f7fafc;
+}
+
+.testimonial .name {
+    color: #63b3ed; /* Azul para el nombre del paciente */
+    font-weight: bold;
+}
+
+/* Call to Action Section */
+.cta {
+    background-color: #4299e1;
+    color: white;
+    padding: 4rem 0;
+    text-align: center;
+}
+
+.cta a {
+    background-color: #48bb78; /* Verde para los botones */
+    padding: 1rem 2rem;
+    border-radius: 0.375rem;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.cta a:hover {
+    background-color: #38a169; /* Verde más oscuro al pasar */
+}

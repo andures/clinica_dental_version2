@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dental Clinic{% endblock %}</title>
+    <style>
+        /* Tailwind CSS Direct Integration (using CDN) */
+        @import url('https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css');
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-gray-850 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{% url 'home' %}" class="text-2xl font-semibold text-blue-400">Dental Clinic</a>
+            <div class="space-x-4">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'logout' %}" class="text-white hover:text-blue-400">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="text-white hover:text-blue-400">Login</a>
+                    <a href="{% url 'register' %}" class="text-white hover:text-blue-400">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+</html>

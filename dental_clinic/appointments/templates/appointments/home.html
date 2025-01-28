@@ -1,0 +1,69 @@
+{%  extends 'appointments/base.html' %}
+{% block title %}Home{% endblock %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'appointments/css/home.css' %}">
+     <!-- Hero Section -->
+     <section class="bg-gray-800 text-white h-screen flex flex-col justify-center items-center text-center px-6 py-12">
+        <h1 class="text-4xl font-bold leading-tight mb-4">Welcome to Our Dental Clinic</h1>
+        <p class="text-xl mb-6">We provide quality dental care with a personal touch. Book your appointment today!</p>
+
+        {% if user.is_authenticated %}
+            <p class="text-lg">Hello, {{ user.username }}! Ready for your next appointment?</p>
+            <a href="{% url 'appointments:create' %}" class="mt-4 inline-block px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">Schedule an Appointment</a>
+        {% else %}
+            <p class="text-lg">Create an account and start your journey to a better smile.</p>
+            <a href="{% url 'register' %}" class="mt-4 inline-block px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Sign Up</a>
+        {% endif %}
+    </section>
+
+    <!-- Information Cards Section -->
+    <section class="bg-gray-900 py-16">
+        <div class="container mx-auto text-center px-6">
+            <h2 class="text-3xl font-semibold text-white mb-8">Our Services</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service Card 1 -->
+                <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl text-blue-400 font-semibold mb-4">General Dentistry</h3>
+                    <p class="text-white">Comprehensive dental care for your entire family. From routine checkups to more advanced procedures.</p>
+                </div>
+
+                <!-- Service Card 2 -->
+                <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl text-blue-400 font-semibold mb-4">Cosmetic Dentistry</h3>
+                    <p class="text-white">Enhance your smile with treatments like teeth whitening, veneers, and more.</p>
+                </div>
+
+                <!-- Service Card 3 -->
+                <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl text-blue-400 font-semibold mb-4">Orthodontics</h3>
+                    <p class="text-white">Braces and aligners to help you achieve a straighter, more confident smile.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="bg-gray-800 py-16">
+        <div class="container mx-auto text-center px-6">
+            <h2 class="text-3xl font-semibold text-white mb-8">What Our Patients Say</h2>
+            <div class="flex justify-center space-x-6">
+                <div class="bg-gray-700 p-8 rounded-lg shadow-lg w-64">
+                    <p class="text-white mb-4">"Best dental experience I've ever had. The staff is super friendly and professional!"</p>
+                    <p class="text-blue-400 font-semibold">John Doe</p>
+                </div>
+                <div class="bg-gray-700 p-8 rounded-lg shadow-lg w-64">
+                    <p class="text-white mb-4">"I finally love my smile! The cosmetic dentistry treatments are top-notch."</p>
+                    <p class="text-blue-400 font-semibold">Jane Smith</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="bg-blue-500 text-white py-12 text-center">
+        <h2 class="text-3xl font-semibold mb-4">Ready to Smile Again?</h2>
+        <p class="mb-6">Contact us today to schedule your appointment and experience exceptional dental care!</p>
+        <a href="{% url 'appointments:create' %}" class="inline-block px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Book Your Appointment</a>
+    </section>
+{% endblock %}
