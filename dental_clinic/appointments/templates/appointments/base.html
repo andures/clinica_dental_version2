@@ -4,33 +4,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Dental Clinic{% endblock %}</title>
-    <style>
-        /* Tailwind CSS Direct Integration (using CDN) */
-        @import url('https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css');
-    </style>
+    
+    <!-- Mejor forma de cargar Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Configuración personalizada de Tailwind -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'dental-blue': '#0ea5e9',
+              'dental-green': '#22c55e',
+              'nav-gray': '#1f2937'
+            },
+            spacing: {
+              'nav-height': '4rem'
+            }
+          }
+        }
+      }
+    </script>
+    
+    <!-- Favicon (opcional pero recomendado) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦷</text></svg>">
 </head>
-<body class="bg-gray-900 text-white">
+<body class="bg-gray-900 text-white min-h-screen flex flex-col">
 
     <!-- Navigation Bar -->
-    <nav class="bg-gray-850 p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="{% url 'home' %}" class="text-2xl font-semibold text-blue-400">Dental Clinic</a>
-            <div class="space-x-4">
+    <nav class="bg-nav-gray p-4 fixed w-full top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center h-nav-height">
+            <a href="{% url 'home' %}" class="text-2xl font-semibold text-dental-blue hover:text-dental-blue/80 transition-colors">
+                Dental Clinic
+            </a>
+            
+            <div class="flex space-x-6">
                 {% if user.is_authenticated %}
-                    <a href="{% url 'logout' %}" class="text-white hover:text-blue-400">Logout</a>
+                    <a href="{% url 'logout' %}" class="text-white hover:text-dental-blue transition-colors">
+                        Logout
+                    </a>
                 {% else %}
-                    <a href="{% url 'login' %}" class="text-white hover:text-blue-400">Login</a>
-                    <a href="{% url 'register' %}" class="text-white hover:text-blue-400">Register</a>
+                    <a href="{% url 'login' %}" class="text-white hover:text-dental-blue transition-colors">
+                        Login
+                    </a>
+                    <a href="{% url 'register' %}" class="text-white hover:text-dental-blue transition-colors">
+                        Register
+                    </a>
                 {% endif %}
             </div>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <div class="">
+    <main class="flex-grow pt-nav-height">
         {% block content %}
         {% endblock %}
-    </div>
+    </main>
+
+    <!-- Footer (opcional) -->
+    <footer class="bg-nav-gray p-6 mt-8">
+        <div class="container mx-auto text-center">
+            <p class="text-gray-400">
+                &copy; 2023 Dental Clinic. All rights reserved.
+            </p>
+        </div>
+    </footer>
 
 </body>
 </html>

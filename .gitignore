@@ -1,0 +1,51 @@
+# Django
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+db.sqlite3
+/media/
+*.sqlite3
+
+# Python
+*.py[cod]
+*$py.class
+
+# Entornos virtuales
+venv/
+env/
+ENV/
+.venv/
+
+# Archivos de configuración de IDEs y editores
+.vscode/
+.idea/
+*.swp
+
+# Archivos de caché de Python
+*.pyc
+*.pyo
+
+# Archivos de configuración de Django
+*.db
+*.sqlite3
+
+# Archivos de configuración de PyCharm
+.idea/
+
+# Archivos de configuración de Visual Studio Code
+.vscode/
+
+# Django migrations
+*/migrations/
+
+# Archivos temporales de sistema
+*.bak
+*.swp
+
+# Archivos de compilación
+*.egg-info/
+dist/
+build/

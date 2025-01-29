@@ -4,13 +4,14 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'appointments/css/home.css' %}">
      <!-- Hero Section -->
-     <section class="bg-gray-800 text-white h-screen flex flex-col justify-center items-center text-center px-6 py-12">
+     <section class="hero bg-gray-800 text-white h-screen flex flex-col justify-center items-center text-center px-6 py-12">
         <h1 class="text-4xl font-bold leading-tight mb-4">Welcome to Our Dental Clinic</h1>
         <p class="text-xl mb-6">We provide quality dental care with a personal touch. Book your appointment today!</p>
 
         {% if user.is_authenticated %}
             <p class="text-lg">Hello, {{ user.username }}! Ready for your next appointment?</p>
             <a href="{% url 'Create_Appointment' %}" class="mt-4 inline-block px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">Schedule an Appointment</a>
+            <a href="{%url 'patients_list' %}" class="mt-4 inline-block px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">Pacientes</a>
         {% else %}
             <p class="text-lg">Create an account and start your journey to a better smile.</p>
             <a href="{% url 'register' %}" class="mt-4 inline-block px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Sign Up</a>
@@ -48,13 +49,15 @@
         <div class="container mx-auto text-center px-6">
             <h2 class="text-3xl font-semibold text-white mb-8">What Our Patients Say</h2>
             <div class="flex justify-center space-x-6">
-                <div class="bg-gray-700 p-8 rounded-lg shadow-lg w-64">
-                    <p class="text-white mb-4">"Best dental experience I've ever had. The staff is super friendly and professional!"</p>
-                    <p class="text-blue-400 font-semibold">John Doe</p>
+                <!-- Testimonial 1 -->
+                <div class="bg-gray-900 p-6 rounded-lg shadow-lg max-w-xs">
+                    <p class="text-white mb-4">"Great service and friendly staff!"</p>
+                    <p class="text-blue-400 font-semibold">- John Doe</p>
                 </div>
-                <div class="bg-gray-700 p-8 rounded-lg shadow-lg w-64">
-                    <p class="text-white mb-4">"I finally love my smile! The cosmetic dentistry treatments are top-notch."</p>
-                    <p class="text-blue-400 font-semibold">Jane Smith</p>
+                <!-- Testimonial 2 -->
+                <div class="bg-gray-900 p-6 rounded-lg shadow-lg max-w-xs">
+                    <p class="text-white mb-4">"I love my new smile!"</p>
+                    <p class="text-blue-400 font-semibold">- Jane Smith</p>
                 </div>
             </div>
         </div>

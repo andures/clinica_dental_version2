@@ -1,19 +1,57 @@
-{%  extends 'appointments/base.html' %}
-{% block title %}Login{% endblock %}
+{% extends 'appointments/base.html' %}
+
+{% block title %}Login - Dental Clinic{% endblock %}
+
 {% block content %}
+<div class="max-w-md mx-auto mt-20 p-8 bg-gray-800 rounded-lg shadow-xl">
+    <!-- Encabezado -->
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-dental-blue mb-2">Welcome Back!</h1>
+        <p class="text-gray-400">Please login to access your account</p>
+    </div>
 
-    <h1 class="text-3xl font-semibold">Login</h1>
-    <form action="{% url 'login' %}" method="POST" class="mt-4">
+    <!-- Formulario -->
+    <form action="{% url 'login' %}" method="POST" class="space-y-6">
         {% csrf_token %}
-        <div class="mb-4">
-            <label for="username" class="block">Username</label>
-            <input type="text" name="username" id="username" class="w-full p-2 bg-gray-800 text-white">
+        
+        <!-- Campo Username -->
+        <div>
+            <label for="username" class="block text-sm font-medium text-gray-300 mb-2">Username</label>
+            <input type="text" name="username" id="username" 
+                   class="w-full px-4 py-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-dental-blue focus:outline-none transition-all"
+                   placeholder="Enter your username"
+                   required>
         </div>
-        <div class="mb-4">
-            <label for="password" class="block">Password</label>
-            <input type="password" name="password" id="password" class="w-full p-2 bg-gray-800 text-white">
-        </div>
-        <button type="submit" class="bg-blue-400 text-white p-2">Login</button>
-    </form>
 
+        <!-- Campo Password -->
+        <div>
+            <label for="password" class="block text-sm font-medium text-gray-300 mb-2">Password</label>
+            <input type="password" name="password" id="password" 
+                   class="w-full px-4 py-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-dental-blue focus:outline-none transition-all"
+                   placeholder="••••••••"
+                   required>
+        </div>
+
+        <!-- Botón Submit -->
+        <button type="submit" 
+                class="w-full bg-dental-blue text-white py-3 px-4 rounded-lg hover:bg-dental-blue/90 focus:ring-2 focus:ring-offset-2 focus:ring-dental-blue focus:outline-none transition-all">
+            Login
+        </button>
+
+        <!-- Enlaces adicionales -->
+        <div class="text-center text-sm text-gray-400">
+            <p class="mt-4">
+                Don't have an account? 
+                <a href="{% url 'register' %}" class="text-dental-blue hover:text-dental-blue/80 transition-colors">
+                    Register here
+                </a>
+            </p>
+            <p class="mt-2">
+                <a href="#" class="text-dental-blue hover:text-dental-blue/80 transition-colors">
+                    Forgot your password?
+                </a>
+            </p>
+        </div>
+    </form>
+</div>
 {% endblock %}

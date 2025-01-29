@@ -1,25 +1,71 @@
-{%  extends 'appointments/base.html' %}
-{% block title %}Register{% endblock %}
+{% extends 'appointments/base.html' %}
+
+{% block title %}Register - Dental Clinic{% endblock %}
+
 {% block content %}
-    <h1 class="text-3xl font-semibold">Register</h1>
-    <form action="{% url 'register' %}" method="POST" class="mt-4">
+<div class="max-w-md mx-auto mt-12 p-8 bg-gray-800 rounded-lg shadow-xl">
+    <!-- Encabezado -->
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-dental-blue mb-2">Create Your Account</h1>
+        <p class="text-gray-400">Join our dental care community</p>
+    </div>
+
+    <!-- Formulario -->
+    <form action="{% url 'register' %}" method="POST" class="space-y-6">
         {% csrf_token %}
-        <div class="mb-4">
-            <label for="username" class="block">Username</label>
-            <input type="text" name="username" id="username" class="w-full p-2 bg-gray-800 text-white">
+        
+        <!-- Campo Username -->
+        <div>
+            <label for="username" class="block text-sm font-medium text-gray-300 mb-2">Username</label>
+            <input type="text" name="username" id="username" 
+                   class="w-full px-4 py-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-dental-blue focus:outline-none transition-all"
+                   placeholder="Choose your username"
+                   required>
         </div>
-        <div class="mb-4">
-            <label for="email" class="block">Email</label>
-            <input type="email" name="email" id="email" class="w-full p-2 bg-gray-800 text-white">
+
+        <!-- Campo Email -->
+        <div>
+            <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
+            <input type="email" name="email" id="email" 
+                   class="w-full px-4 py-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-dental-blue focus:outline-none transition-all"
+                   placeholder="Enter your email"
+                   required>
         </div>
-        <div class="mb-4">
-            <label for="password1" class="block">Password</label>
-            <input type="password" name="password1" id="password1" class="w-full p-2 bg-gray-800 text-white">
+
+        <!-- Campo Password -->
+        <div>
+            <label for="password1" class="block text-sm font-medium text-gray-300 mb-2">Password</label>
+            <input type="password" name="password1" id="password1" 
+                   class="w-full px-4 py-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-dental-blue focus:outline-none transition-all"
+                   placeholder="••••••••"
+                   required>
+            <p class="mt-2 text-xs text-gray-400">At least 8 characters</p>
         </div>
-        <div class="mb-4">
-            <label for="password2" class="block">Confirm Password</label>
-            <input type="password" name="password2" id="password2" class="w-full p-2 bg-gray-800 text-white">
+
+        <!-- Campo Confirm Password -->
+        <div>
+            <label for="password2" class="block text-sm font-medium text-gray-300 mb-2">Confirm Password</label>
+            <input type="password" name="password2" id="password2" 
+                   class="w-full px-4 py-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-dental-blue focus:outline-none transition-all"
+                   placeholder="••••••••"
+                   required>
         </div>
-        <button type="submit" class="bg-blue-400 text-white p-2">Register</button>
+
+        <!-- Botón Submit -->
+        <button type="submit" 
+                class="w-full bg-dental-blue text-white py-3 px-4 rounded-lg hover:bg-dental-blue/90 focus:ring-2 focus:ring-offset-2 focus:ring-dental-blue focus:outline-none transition-all">
+            Create Account
+        </button>
+
+        <!-- Enlace a Login -->
+        <div class="text-center text-sm text-gray-400">
+            <p class="mt-4">
+                Already have an account? 
+                <a href="{% url 'login' %}" class="text-dental-blue hover:text-dental-blue/80 transition-colors">
+                    Login here
+                </a>
+            </p>
+        </div>
     </form>
+</div>
 {% endblock %}
