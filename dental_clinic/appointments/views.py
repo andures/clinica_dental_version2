@@ -4,6 +4,9 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from .forms import AppointmentForm , PatientForm
 from django.contrib.auth.decorators import login_required
 from .models import Patient
+from django.contrib.auth.models import User
+from django.db.models import Q
+from django.utils import timezone
 
 # Create your views here.
 def home(request):
@@ -69,6 +72,8 @@ def patient_create(request):
         if form.is_valid():
             patient = form.save(commit=False)
             patient.dentist = request.user
+            if patient.next_appointment:
+                patient.next_appointment = timezone.make_aware(patient.next_appointment)
             patient.save()
             return redirect('patients_list')
     else:

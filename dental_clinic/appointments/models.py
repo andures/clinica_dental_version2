@@ -51,8 +51,32 @@ class Patient(models.Model):
         ('sinusitis', 'Sinusitis'),
         ('other', 'Otras')
     ]
+
+    TootthCondition =[
+        ('S', 'Sano (S)'),
+        ('A', 'Amalgama (A)'),
+        ('R', 'Resina (R)'),
+        ('C', 'Caries (C)'),
+        ('-', 'Ausente (-)'),
+        ('X', 'Perdido (X)'),
+        ('EI', 'Extracción Indicada (EI)'),
+        ('P', 'Periodontopatias (P)'),
+        ('E', 'Endodoncia (E)'),
+        ('PR', 'Prótesis Removible (PR)'),
+        ('I', 'Incrustación (I)'),
+        ('FR', 'Fractura Dentaria (FR)'),
+        ('S', 'Sellantes (S)'),
+        ('PP', 'Pulpotomía (PP)'),
+        ('PC', 'Pulpectomia (PC)'),
+    ]
+
+    CONDITIONS_TYPE_CHOICES = [
+        ('generalized', 'Generalizada'),
+        ('localized', 'Localizada')
+    ]
     
     conditions = MultiSelectField(choices=CONDITIONS_CHOICES, default='', verbose_name="Afecciones", null=True, blank=True)
+    tooth_18 = models.CharField(max_length=2, choices=TootthCondition, default='S', verbose_name="18", null=True, blank=True)
     observations = models.TextField(blank=True, null=True, default='', verbose_name="Observaciones")
     attach_medical_report = models.CharField(max_length=3, choices=[('yes', 'Sí'), ('no', 'No')], default='no', verbose_name="Adjunta el informe médico", null=True, blank=True)
     difficulty_speaking = models.CharField(max_length=3, choices=[('yes', 'Sí'), ('no', 'No')], default='no', verbose_name="¿Tiene dificultad para hablar?", null=True, blank=True)
@@ -74,6 +98,7 @@ class Patient(models.Model):
     tartar_presence = models.CharField(max_length=3, choices=[('yes', 'Sí'), ('no', 'No')], default='no', verbose_name="Presencia de sarro", null=True, blank=True)
     periodontal_disease = models.CharField(max_length=3, choices=[('yes', 'Sí'), ('no', 'No')], default='no', verbose_name="Enfermedad periodontal", null=True, blank=True)
     periodontal_disease_location = models.CharField(max_length=200, blank=True, null=True, default='', verbose_name="¿Dónde? (si es localizada)")
+    conditions_type = models.CharField(max_length=20, choices=CONDITIONS_TYPE_CHOICES, default='generalized', verbose_name="Tipo de afección", null=True, blank=True)
     diagnosis = models.TextField(default='', verbose_name="Diagnóstico", null=True, blank=True)
     treatment_plan = models.TextField(default='', verbose_name="Plan de Tratamiento", null=True, blank=True)
 
