@@ -5,8 +5,9 @@
 {% endblock %}
 
 {% block content %}
-<div class="container mx-auto p-2">
-    <h1 class="text-3xl font-bold text-dental-blue mb-10 mt-8 text-center">
+{% load widget_tweaks %}
+<div class="container mx-auto py-8 px-4 max-w-4xl lg:py-16">
+    <h1 class="text-3xl font-bold text-dental-blue mb-10 mt-2 text-center">
         {% if form.instance.pk %}
             Editar Paciente: {{ form.instance.name }}
         {% else %}
@@ -15,21 +16,655 @@
     </h1>
     <form method="post" action="" class="bg-gray-800 p-5 rounded-lg shadow-lg">
         {% csrf_token %}
-        <div class="space-y-4">
-            {% for field in form %}
-                <div class="flex flex-col">
-                    <label for="{{ field.id_for_label }}" class="text-white">{{ field.label }}</label>
-                    {{ field }}
-                    {% if field.errors %}
-                        <div class="text-red-500 text-sm mt-1">
-                            {{ field.errors }}
-                        </div>
-                    {% endif %}
+        
+        <!-- Sección 1: Datos Generales -->
+        <fieldset class="py-8 px-1 mx-auto max-w-4xl lg:py-16 bg-gray-600 p-2 rounded-lg shadow-lg">
+            <legend class="text-xl font-semibold text-dental-blue flex justify-center mb-4">Datos Generales</legend>
+            <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+                <div class="sm:col-span-2">
+                    <label for="{{ form.name.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Nombre del Paciente</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-user text-gray-400"></i>
+                        </span>
+                        {% render_field form.name placeholder="Nombre del Paciente" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
                 </div>
-            {% endfor %}
-        </div>
-        <div class="flex justify-end mt-4">
-            <button type="submit" class="bg-dental-green text-white px-4 py-2 rounded-md hover:bg-dental-green/80 transition-colors">
+                <div class="w-full">
+                    <label for="{{ form.age.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Edad</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-birthday-cake text-gray-400"></i>
+                        </span>
+                        {% render_field form.age placeholder="Edad" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.email.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Correo Electrónico</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-envelope text-gray-400"></i>
+                        </span>
+                        {% render_field form.email placeholder="Correo Electrónico" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.birth_date.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Fecha de Nacimiento</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-calendar-alt text-gray-400"></i>
+                        </span>
+                        {% render_field form.birth_date type="date" placeholder="Fecha de Nacimiento" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.num_Expidiente.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Número de Expediente</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-file-alt text-gray-400"></i>
+                        </span>
+                        {% render_field form.num_Expidiente placeholder="Número de Expediente" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.identity_number.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Número de Identidad</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-id-card text-gray-400"></i>
+                        </span>
+                        {% render_field form.identity_number placeholder="Número de Identidad" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.gender.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Género</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-venus-mars text-gray-400"></i>
+                        </span>
+                        {% render_field form.gender placeholder="Género" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.phone.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Teléfono</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-phone text-gray-400"></i>
+                        </span>
+                        {% render_field form.phone placeholder="Teléfono" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.origin.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Lugar de Procedencia</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-map-marker-alt text-gray-400"></i>
+                        </span>
+                        {% render_field form.origin placeholder="Lugar de Procedencia" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.neighborhood.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Barrio / Colonia / Residencial</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-home text-gray-400"></i>
+                        </span>
+                        {% render_field form.neighborhood placeholder="Barrio / Colonia / Residencial" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.responsible_name.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Nombre del Responsable</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-user-shield text-gray-400"></i>
+                        </span>
+                        {% render_field form.responsible_name placeholder="Nombre del Responsable" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.relationship.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Relación / Parentesco</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-users text-gray-400"></i>
+                        </span>
+                        {% render_field form.relationship placeholder="Relación / Parentesco" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.responsible_phone.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Teléfono del Responsable</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-phone-alt text-gray-400"></i>
+                        </span>
+                        {% render_field form.responsible_phone placeholder="Teléfono del Responsable" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <!-- Sección 2: Historial clinica general -->
+
+        <fieldset class="py-8 px-1 mx-auto max-w-4xl lg:py-16 bg-gray-600 p-2 rounded-lg shadow-lg mt-8">
+            <legend class="text-xl font-semibold text-dental-blue flex justify-center mb-4">Historial Clinica General</legend>
+            <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+                <div class="w-full">
+                    <label for="{{ form.hospitalized_last_2_years.id_for_label }}" class="block mb-2 text-sm font-medium text-white">¿Ha sido hospitalizado en los últimos dos años?</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-hospital text-gray-400"></i>
+                        </span>
+                        {% render_field form.hospitalized_last_2_years placeholder="Hospitalizado" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.hospitalization_reason.id_for_label }}" class="block mb-2 text-sm font-medium text-white">¿Por qué?</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class=" fas fa-solid fa-question text-gray-400"></i>
+                        </span>
+                        {% render_field form.hospitalization_reason placeholder="¿Por qué?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ for.under_medical_treatment.id_for_label }}" class="block mb-2 text-sm font-medium text-white">¿Esta bajo tratamiento medico por enfermedad?</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-pills text-gray-400"></i>
+                        </span>
+                        {% render_field form.under_medical_treatment placeholder="¿Esta bajo tratamiento medico por enfermedad?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ for.medical_condition.id_for_label}}" class="block mb-2 text-sm font-medium text-white">¿Si, que enfermedad?</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-question text-gray-400"></i>
+                        </span>
+                        {% render_field form.medical_condition placeholder="¿Cuál?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                    </div>
+                <div class="w-full">
+                    <label for="{{ form.allergic_to_substances.id_for_label }}" class="block mb-2 text-sm font-medium text-white">¿Tiene alergias a medicamentos o alimentos?</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-allergies text-gray-400"></i>
+                        </span>
+                        {% render_field form.allergic_to_substances placeholder="¿Tiene alergias a medicamentos o alimentos?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.allergies_detail.id_for_label}}" class="block mb-2 text-sm font-medium text-white">¿Si, que ?</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-question text-gray-400"></i>
+                        </span>
+                        {% render_field form.allergies_detail placeholder="¿Cuál?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="{{ form.regular_medications.id_for_label}}" class="block mb-2 text-sm font-medium text-white">¿Qué medicamentos consume habitualmente? </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-pills text-gray-400"></i>
+                        </span>
+                        {% render_field form.regular_medications placeholder="¿Toma medicamentos regularmente?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.smokes.id_for_label }}" class="block mb-2 text-sm font-medium text-white">¿Fuma? </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-regular fa-smoking text-gray-400"></i>
+                        </span>
+                        {% render_field form.smokes placeholder="¿Fuma?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.cigarettes_per_day.id_for_label }}" class="block mb-2 text-sm font-medium text-white">¿Cuántos cigarrillos al día? </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-question text-gray-400"></i>
+                        </span>
+                        {% render_field form.cigarettes_per_day placeholder="¿Cuántos cigarrillos al día?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.drinks_alcohol.id_for_label }}" class="block mb-2 text-sm font-medium text-white">¿Toma alcohol? </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-wine-bottle text-gray-400"></i>
+                        </span>
+                        {% render_field form.drinks_alcohol placeholder="¿Toma alcohol?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.alcohol_amount.id_for_label }}" class="block mb-2 text-sm font-medium text-white">¿Cuántas veces a la semana? </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-question text-gray-400"></i>
+                        </span>
+                        {% render_field form.alcohol_amount placeholder="¿Cuántas veces a la semana?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="" class="block mb-2 text-sm font-medium text-white underline">Paciente Mujer</label>
+
+                </div>
+                <div>
+                    <label for="{{ form.is_pregnant.id_for_label}}" class="block mb-2 text-sm font-medium text-white">¿Está embarazada? </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-baby text-gray-400"></i>
+                        </span>
+                        {% render_field form.is_pregnant placeholder="¿Está embarazada?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.pregnancy_months.id_for_label }}" class="block mb-2 text-sm font-medium text-white">¿Cuántos meses? </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-baby text-gray-400"></i>
+                        </span>
+                        {% render_field form.pregnancy_months placeholder="¿Cuántos meses?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>  
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.conditions.id_for_label }}" class="block mb-2 text-sm font-medium text-white ">Marque cualquier de las afecciones abajo descritas que tiene o haya tenido el paciente.</label>
+                    <div class="relative bg-gray-700 border border-gray-600 text-white text-base rounded-lg focus:ring-primary-600 focus:border-primary-600 p-4">
+                        {% for checkbox in form.conditions %}
+                            <div class="flex items-center mb-2 ml-20">
+                                {{ checkbox.tag }}
+                                <label for="{{ checkbox.id_for_label }}" class="ml-2">{{ checkbox.choice_label }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.observations.id_for_label}}" class="block mb-2 text-sm font-medium text-white">Observaciones</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-regular fa-eye text-gray-400"></i>
+                        </span>
+                        {% render_field form.observations|attr:"rows:6" type="textarea" placeholder="Observaciones" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                    <label for="{{ form.attach_medical_report.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Adjunta el informe médico </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-file-medical text-gray-400"></i>
+                        </span>
+                        {% render_field form.attach_medical_report placeholder="Adjunta el informe médico" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+            </div>
+         </fieldset>
+
+        <!-- Sección 3: Historial clinica Dental -->
+         <fieldset class="py-8 px-1 mx-auto max-w-4xl lg:py-16 bg-gray-600 p-2 rounded-lg shadow-lg mt-8">
+            <legend class="text-xl font-semibold text-dental-blue flex justify-center mb-4">Historial Clinica Dental</legend>
+            <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+                <div class="w-full">
+                    <label for="{{ form.difficulty_speaking.id_for_label }}" class="block mb-2 text-sm font-medium text-white">¿Tiene dificultad para hablar?</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-comment-alt text-gray-400"></i>
+                        </span>
+                        {% render_field form.difficulty_speaking placeholder="¿Tiene dificultad para hablar?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.difficulty_chewing.id_for_label}}">¿Para masticar?</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-utensils text-gray-400"></i>
+                        </span>
+                        {% render_field form.difficulty_chewing placeholder="¿Tiene dificultad para masticar?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.difficulty_opening_mouth.id_for_label}}">¿Para abrir la boca?</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-regular fa-teeth-open text-gray-400"></i>
+                        </span>
+                        {% render_field form.difficulty_opening_mouth placeholder="¿Tiene dificultad para abrir la boca?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.difficulty_swallowing.id_for_label}}">¿Para tragar los alimentos?</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-utensils text-gray-400"></i>
+                        </span>
+                        {% render_field form.difficulty_swallowing placeholder="¿Tiene dificultad para tragar los alimentos?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}               
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.bleeding_gums.id_for_label }}">¿Le sangran las encías?</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-tooth text-gray-400"></i>
+                        </span>
+                        {% render_field form.bleeding_gums placeholder="¿Le sangran las encías?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.tooth_mobility.id_for_label }}">¿Tiene movilidad en algún diente?</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-tooth text-gray-400"></i>
+                        </span>
+                        {% render_field form.tooth_mobility placeholder="¿Tiene movilidad en algún diente?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.pus_in_mouth.id_for_label }}">¿Le sale pus de algún lugar de la boca?</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-tooth text-gray-400"></i>
+                        </span>
+                        {% render_field form.pus_in_mouth placeholder="¿Le sale pus de algún lugar de la boca?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.pus_location.id_for_label }}">¿Dónde? </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-question text-gray-400"></i>
+                        </span>
+                        {% render_field form.pus_location placeholder="¿Dónde?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.brushing_frequency.id_for_label}}">¿Cuántas veces al día se cepilla los dientes?</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-tooth text-gray-400"></i>
+                        </span>
+                        {% render_field form.brushing_frequency placeholder="¿Cuántas veces al día se cepilla los dientes?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.oral_hygiene_status.id_for_label }}">¿Estado de la higiene bucal?</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-tooth text-gray-400"></i>
+                        </span>
+                        {% render_field form.oral_hygiene_status placeholder="¿Estado de la higiene bucal?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>                    
+                </div>
+            </div>
+         </fieldset>
+         <!--seccion 4 Estado de los tejidos blandos-->
+         <fieldset class="py-8 px-1 mx-auto max-w-4xl lg:py-16 bg-gray-600 p-2 rounded-lg shadow-lg mt-8">
+            <legend class="text-xl font-semibold text-dental-blue flex justify-center mb-4">ESTADO DE LOS TEJIDOS BLANDOS</legend>
+            <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+                <div class="w-full">
+                    <label for="{{ form.tongue_condition.id_for_label }}">Lengua:</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-tongue text-gray-400"></i>
+                        </span>
+                        {% render_field form.tongue_condition placeholder="Lengua" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.lips_condition.id_for_label }}">Labios:</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-kiss-wink-heart text-gray-400"></i>
+                        </span>
+                        {% render_field form.lips_condition placeholder="Labios" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.cheeks_condition.id_for_label }}">Carillos:</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-smile-beam text-gray-400"></i>
+                        </span>
+                        {% render_field form.cheeks_condition placeholder="Carillos" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.floor_of_mouth_condition.id_for_label }}">Piso de la boca:</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-smile-beam text-gray-400"></i>
+                        </span>
+                        {% render_field form.floor_of_mouth_condition placeholder="Piso de la boca" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.gingival_tissue_condition.id_for_label }}">Tejido gingival  periodontal:</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-smile-beam text-gray-400"></i>
+                        </span>
+                        {% render_field form.gingival_tissue_condition placeholder="Tejido gingival  periodontal" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.number_of_teeth.id_for_label }}">Cantidad de dientes presentes:</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-tooth text-gray-400"></i>
+                        </span>
+                        {% render_field form.number_of_teeth placeholder="Cantidad de dientes presentes" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.tartar_presence.id_for_label }}">Presencia de sarro:</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-tooth text-gray-400"></i>
+                        </span>
+                        {% render_field form.tartar_presence placeholder="Presencia de sarro" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.periodontal_disease.id_for_label }}">Enfermedad periodontal:</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-tooth text-gray-400"></i>
+                        </span>
+                        {% render_field form.periodontal_disease placeholder="Enfermedad periodontal" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.conditions_type.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Tipo de Condición</label>
+                    <div class="relative bg-gray-700 border border-gray-600 text-white text-base rounded-lg focus:ring-primary-600 focus:border-primary-600 p-4">
+                        <div class="flex space-x-4">
+                            {% for radio in form.conditions_type %}
+                                {% if radio.choice_label != "---------" %}
+                                    <div class="flex items-center">
+                                        {{ radio.tag }}
+                                        <label for="{{ radio.id_for_label }}" class="ml-2">{{ radio.choice_label }}</label>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.periodontal_disease_location.id_for_label}}">¿Dónde?</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-question text-gray-400"></i>
+                        </span>
+                        {% render_field form.periodontal_disease_location placeholder="¿Dónde?" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+            </div>
+         </fieldset>
+
+         <!-- Sección 5: Condiciones de los dientes -->
+         <fieldset class="py-8 px-1 mx-auto max-w-4xl lg:py-8 bg-gray-600 p-2 rounded-lg shadow-lg mt-8">
+            <legend class="text-xl font-semibold text-dental-blue flex justify-center mb-4">Condiciones de los Dientes</legend>
+            <div>
+                <label for="" class="text-sm font-medium text-white">Simbología:<br>
+                    Sano (S), Amalgama (A), Resina (R), Caries (C), Ausente (-), Perdido (X), Extracción Indicada (EI), Periodontopatias (P), Endodoncia (E), Prótesis Removible (PR), Incrustación(I), Fractura Dentaria (FR), Sellantes(S), Pulpotomía (PP), Pulpectomia (PC)
+                </label>
+            </div>
+            <div class="grid grid-cols-10 gap-4">
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_1.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 1</label>
+                    {% render_field form.tooth_1 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_2.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 2</label>
+                    {% render_field form.tooth_2 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_3.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 3</label>
+                    {% render_field form.tooth_3 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_4.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 4</label>
+                    {% render_field form.tooth_4 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_5.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 5</label>
+                    {% render_field form.tooth_5 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_6.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 6</label>
+                    {% render_field form.tooth_6 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_7.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 7</label>
+                    {% render_field form.tooth_7 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_8.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 8</label>
+                    {% render_field form.tooth_8 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_9.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 9</label>
+                    {% render_field form.tooth_9 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_10.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 10</label>
+                    {% render_field form.tooth_10 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_11.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 11</label>
+                    {% render_field form.tooth_11 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_12.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 12</label>
+                    {% render_field form.tooth_12 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_13.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 13</label>
+                    {% render_field form.tooth_13 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_14.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 14</label>
+                    {% render_field form.tooth_14 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_15.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 15</label>
+                    {% render_field form.tooth_15 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_16.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 16</label>
+                    {% render_field form.tooth_16 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_17.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 17</label>
+                    {% render_field form.tooth_17 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_18.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 18</label>
+                    {% render_field form.tooth_18 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_19.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 19</label>
+                    {% render_field form.tooth_19 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_20.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 20</label>
+                    {% render_field form.tooth_20 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_21.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 21</label>
+                    {% render_field form.tooth_21 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_22.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 22</label>
+                    {% render_field form.tooth_22 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_23.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 23</label>
+                    {% render_field form.tooth_23 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_24.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 24</label>
+                    {% render_field form.tooth_24 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_25.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 25</label>
+                    {% render_field form.tooth_25 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_26.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 26</label>
+                    {% render_field form.tooth_26 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_27.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 27</label>
+                    {% render_field form.tooth_27 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_28.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 28</label>
+                    {% render_field form.tooth_28 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_29.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 29</label>
+                    {% render_field form.tooth_29 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_30.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 30</label>
+                    {% render_field form.tooth_30 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_31.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 31</label>
+                    {% render_field form.tooth_31 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+                <div class="col-span-1">
+                    <label for="{{ form.tooth_32.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diente 32</label>
+                    {% render_field form.tooth_32 class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                </div>
+            </div>
+        </fieldset>
+        <!-- Sección 6: Tratamiento -->
+         <fieldset class="py-8 px-1 mx-auto max-w-4xl lg:py-8 bg-gray-600 p-2 rounded-lg shadow-lg mt-8">
+            <legend class="text-xl font-semibold text-dental-blue flex justify-center mb-4">ODONTOGRAMA DE DIAGNOSTICO</legend>
+            <div class="grid grid-cols-1 gap-4">
+                <div class="w-full">
+                    <label for="{{ form.diagnosis.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Diagnóstico</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-diagnoses text-gray-400"></i>
+                        </span>
+                        {% render_field form.diagnosis|attr:"rows:6" type="textarea" placeholder="Diagnóstico" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="{{ form.treatment_plan.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Plan de Tratamiento</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-solid fa-file-medical-alt text-gray-400"></i>
+                        </span>
+                        {% render_field form.treatment_plan|attr:"rows:6" type="textarea" placeholder="Plan de Tratamiento" class+="pl-10 bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+            </div>
+         </fieldset>
+        <!--botons-->       
+        <div class="flex justify-center mt-4 space-x-4">
+            <a href="{% url 'patients_list' %}" class="bg-gray-500 text-white px-5 py-2.5 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-gray-600 transition-colors">
+                Cancelar
+            </a>
+            <button type="submit" class="bg-dental-green text-black px-5 py-2.5 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-dental-green/80 transition-colors">
                 {% if form.instance.pk %}Actualizar{% else %}Crear{% endif %}
             </button>
         </div>
