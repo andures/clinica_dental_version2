@@ -140,9 +140,15 @@ class Patient(models.Model):
 
 class Appointment(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    appointment_date = models.DateField()
+    appointment_date = models.DateTimeField()
     time = models.TimeField()
     reason = models.TextField()
+    dentist = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    email = models.EmailField(default='', verbose_name="Correo Electrónico", null=True, blank=True)
 
+    def save(self, *args, **kwargs):
+        self.email = self.patient.email
+        super(Appointment, self).save(*args, **kwargs)
+        
     def __str__(self):
         return f"{self.patient.name} - {self.appointment_date} {self.time}"

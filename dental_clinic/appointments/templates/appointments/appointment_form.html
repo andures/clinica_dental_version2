@@ -1,0 +1,104 @@
+{% extends 'appointments/base.html' %}
+
+{% block title %}
+    {% if form.instance.pk %}Editar Cita{% else %}Crear Cita{% endif %}
+{% endblock %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="container mx-auto py-8 px-4 max-w-2xl lg:py-16">
+    <h1 class="text-3xl font-bold text-dental-blue mb-10 mt-8 text-center">
+        {% if form.instance.pk %}
+            Editar Cita
+        {% else %}
+            Crear Nueva Cita
+        {% endif %}
+    </h1>
+    <form method="post" action="" class="bg-gray-800 p-8 rounded-lg shadow-lg">
+        {% csrf_token %}
+        <div class="grid gap-6 sm:grid-cols-2">
+            <div class="sm:col-span-2">
+                <label for="patient_type" class="block mb-2 text-sm font-medium text-white">Tipo de Paciente</label>
+                <select id="patient_type" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
+                    <option value="existing">Paciente Existente</option>
+                    <option value="new">Nuevo Paciente</option>
+                </select>
+            </div>
+            <div id="existing_patient_fields" class="sm:col-span-2">
+                <label for="{{ form.patient.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Paciente Existente</label>
+                {% render_field form.patient class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                <label for="{{ form.email.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Correo Electrónico</label>
+                {% render_field form.email class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+            </div>
+            <div id="new_patient_fields" class="hidden sm:col-span-2">
+                <div class="grid gap-6 sm:grid-cols-2">
+                    <div class="w-full">
+                        <label for="{{ form.new_patient_name.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Nombre del Nuevo Paciente</label>
+                        {% render_field form.new_patient_name class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                    <div class="w-full">
+                        <label for="{{ form.new_patient_email.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Correo Electrónico del Nuevo Paciente</label>
+                        {% render_field form.new_patient_email class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                    <div class="w-full">
+                        <label for="{{ form.new_patient_phone.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Teléfono del Nuevo Paciente</label>
+                        {% render_field form.new_patient_phone class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                </div>
+            </div>
+            <div class="w-full">
+                <label for="{{ form.appointment_date.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Fecha</label>
+                {% render_field form.appointment_date type="date" class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+            </div>
+            <div class="w-full">
+                <label for="{{ form.time.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Hora</label>
+                {% render_field form.time type="time" class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+            </div>
+            <div class="sm:col-span-2">
+                <label for="{{ form.reason.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Razón</label>
+                {% render_field form.reason class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+            </div>
+        </div>
+        <div class="flex justify-center mt-6 space-x-4">
+            <a href="{% url 'appointments_list' %}" class="bg-gray-500 text-white px-5 py-2.5 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-gray-600 transition-colors">
+                Cancelar
+            </a>
+            <button type="submit" class="bg-dental-green text-white px-5 py-2.5 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-dental-green/80 transition-colors">
+                {% if form.instance.pk %}Actualizar{% else %}Crear{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const patientTypeSelect = document.getElementById('patient_type');
+        const existingPatientFields = document.getElementById('existing_patient_fields');
+        const newPatientFields = document.getElementById('new_patient_fields');
+        const patientSelect = document.getElementById('{{ form.patient.id_for_label }}');
+        const emailField = document.getElementById('{{ form.email.id_for_label }}');
+
+        patientTypeSelect.addEventListener('change', function() {
+            if (this.value === 'new') {
+                existingPatientFields.classList.add('hidden');
+                newPatientFields.classList.remove('hidden');
+            } else {
+                existingPatientFields.classList.remove('hidden');
+                newPatientFields.classList.add('hidden');
+            }
+        });
+
+        patientSelect.addEventListener('change', function() {
+            const selectedPatientId = this.value;
+            if (selectedPatientId) {
+                fetch(`/get_patient_email/${selectedPatientId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        emailField.value = data.email;
+                    });
+            } else {
+                emailField.value = '';
+            }
+        });
+    });
+</script>
+{% endblock %}

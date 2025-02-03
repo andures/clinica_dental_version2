@@ -10,8 +10,9 @@
 
         {% if user.is_authenticated %}
             <p class="text-lg">Hello, {{ user.username }}! Ready for your next appointment?</p>
-            <a href="{% url 'Create_Appointment' %}" class="mt-4 inline-block px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">Schedule an Appointment</a>
-            <a href="{%url 'patients_list' %}" class="mt-4 inline-block px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">Pacientes</a>
+            <a href="{% url 'patients_list' %}" class="mt-4 inline-block px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">Pacientes</a>
+            <a href="{% url 'appointments_list' %}" class="mt-4 inline-block px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">Citas</a>
+            <a href="{% url 'dashboard' %}" class="mt-4 inline-block px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">Dashboard</a>
         {% else %}
             <p class="text-lg">Create an account and start your journey to a better smile.</p>
             <a href="{% url 'register' %}" class="mt-4 inline-block px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Sign Up</a>
@@ -67,6 +68,6 @@
     <section class="bg-blue-500 text-white py-12 text-center">
         <h2 class="text-3xl font-semibold mb-4">Ready to Smile Again?</h2>
         <p class="mb-6">Contact us today to schedule your appointment and experience exceptional dental care!</p>
-        <a href="{% url 'Create_Appointment' %}" class="inline-block px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Book Your Appointment</a>
+        <a href="{% url 'appointments_list' %}" class="inline-block px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Book Your Appointment</a>
     </section>
 {% endblock %}

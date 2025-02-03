@@ -1,0 +1,205 @@
+{% extends 'appointments/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mx-auto py-8 px-4 max-w-7xl lg:py-16">
+    <h1 class="text-3xl font-bold text-dental-blue mb-10 mt-8 text-center">Dashboard</h1>
+    
+    <!-- Estadísticas -->
+    <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
+        <div class="flex items-center p-4 bg-gray-800 rounded-lg shadow-xs">
+            <div class="p-3 mr-4 text-dental-blue bg-dental-blue/20 rounded-full">
+                <i class="fas fa-users text-2xl"></i>
+            </div>
+            <div>
+                <p class="mb-2 text-sm font-medium text-gray-400">Total de Pacientes</p>
+                <p class="text-lg font-semibold text-gray-200">{{ total_patients }}</p>
+            </div>
+        </div>
+        <div class="flex items-center p-4 bg-gray-800 rounded-lg shadow-xs">
+            <div class="p-3 mr-4 text-dental-blue bg-dental-blue/20 rounded-full">
+                <i class="fas fa-calendar-alt text-2xl"></i>
+            </div>
+            <div>
+                <p class="mb-2 text-sm font-medium text-gray-400">Total de Citas</p>
+                <p class="text-lg font-semibold text-gray-200">{{ total_appointments }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calendario -->
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
+        <h2 class="text-xl font-semibold text-dental-blue mb-4">Calendario de Citas</h2>
+        <table id="calendar" class="table-auto w-full text-white">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2">Dom</th>
+                    <th class="px-4 py-2">Lun</th>
+                    <th class="px-4 py-2">Mar</th>
+                    <th class="px-4 py-2">Mié</th>
+                    <th class="px-4 py-2">Jue</th>
+                    <th class="px-4 py-2">Vie</th>
+                    <th class="px-4 py-2">Sáb</th>
+                </tr>
+            </thead>
+            <tbody id="calendar-body">
+                <!-- Las filas del calendario se generarán dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Próximas Citas -->
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h2 class="text-xl font-semibold text-dental-blue mb-4">Próximas Citas</h2>
+        <ul id="appointmentList">
+            {% for appointment in upcoming_appointments %}
+                <li class="mb-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-lg font-semibold text-gray-200">{{ appointment.patient.name }}</p>
+                            <p class="text-sm text-gray-400">{{ appointment.appointment_date|date:"d/m/Y H:i" }}</p>
+                        </div>
+                        <a href="#" class="text-dental-blue hover:text-dental-blue/80 transition-colors">Ver Detalles</a>
+                    </div>
+                </li>
+            {% empty %}
+                <li class="text-gray-400">No hay próximas citas.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg mt-8">
+        <h2 class="text-xl font-semibold text-dental-blue mb-4">Métricas</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <canvas id="appointmentsChart"></canvas>
+            </div>
+            <div>
+                <canvas id="patientsChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const appointments = JSON.parse('{{ upcoming_appointments_json|escapejs }}');
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const calendarBody = document.getElementById('calendar-body');
+        const appointmentList = document.getElementById('appointmentList');
+
+        function generateCalendar() {
+            const today = new Date();
+            const month = today.getMonth();
+            const year = today.getFullYear();
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            calendarBody.innerHTML = '';
+            let row = document.createElement('tr');
+
+            for (let i = 0; i < firstDay; i++) {
+                const emptyCell = document.createElement('td');
+                row.appendChild(emptyCell);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                if (row.children.length === 7) {
+                    calendarBody.appendChild(row);
+                    row = document.createElement('tr');
+                }
+
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayCell = document.createElement('td');
+                dayCell.classList.add('px-4', 'py-2', 'bg-gray-700', 'text-center', 'cursor-pointer', 'hover:bg-gray-600');
+                dayCell.textContent = day;
+                dayCell.addEventListener('click', () => showAppointments(dateStr));
+                row.appendChild(dayCell);
+            }
+
+            if (row.children.length > 0) {
+                calendarBody.appendChild(row);
+            }
+        }
+
+        function showAppointments(dateStr) {
+            const dayAppointments = appointments.filter(appointment => appointment.date === dateStr);
+            appointmentList.innerHTML = '';
+            if (dayAppointments.length > 0) {
+                dayAppointments.forEach(appointment => {
+                    const li = document.createElement('li');
+                    li.classList.add('mb-4');
+                    li.innerHTML = `
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-lg font-semibold text-gray-200">${appointment.patient}</p>
+                                <p class="text-sm text-gray-400">${appointment.time}</p>
+                                <p class="text-sm text-gray-400">${appointment.reason}</p>
+                            </div>
+                            <a href="#" class="text-dental-blue hover:text-dental-blue/80 transition-colors">Ver Detalles</a>
+                        </div>
+                    `;
+                    appointmentList.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.classList.add('text-gray-400');
+                li.textContent = 'No hay citas para este día.';
+                appointmentList.appendChild(li);
+            }
+        }
+
+        generateCalendar();
+
+        // Gráficos
+        const ctxAppointments = document.getElementById('appointmentsChart').getContext('2d');
+        const ctxPatients = document.getElementById('patientsChart').getContext('2d');
+
+        const appointmentsChart = new Chart(ctxAppointments, {
+            type: 'line',
+            data: {
+                labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                datasets: [{
+                    label: 'Citas',
+                    data: [12, 19, 3, 5, 2, 3, 10, 15, 8, 12, 7, 14],
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const patientsChart = new Chart(ctxPatients, {
+            type: 'bar',
+            data: {
+                labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                datasets: [{
+                    label: 'Pacientes Nuevos',
+                    data: [5, 10, 8, 6, 7, 9, 12, 15, 10, 8, 6, 9],
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
