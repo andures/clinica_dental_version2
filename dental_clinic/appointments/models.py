@@ -138,14 +138,14 @@ class Patient(models.Model):
     treatment_plan = models.TextField(default='', verbose_name="Plan de Tratamiento", null=True, blank=True)
 
     @property
-    def next_appointment_date(self):
-        return self.appointment.filter(appointment_date_gte=timezone.now()).order_by('appointment_date').first()
+    def next_appointment(self):
+        return self.appointments.filter(appointment_date__gte=timezone.now()).order_by('appointment_date').first()
     
     def __str__(self):
         return self.name
 
 class Appointment(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patient, related_name='appointments', on_delete=models.CASCADE)
     appointment_date = models.DateTimeField()
     time = models.TimeField()
     reason = models.TextField()
