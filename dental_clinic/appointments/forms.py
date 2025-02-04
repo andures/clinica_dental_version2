@@ -1,5 +1,5 @@
 from django import forms
-from .models import Appointment, Patient
+from .models import Appointment, Patient , Budget
 
 
 class AppointmentForm(forms.ModelForm):
@@ -46,3 +46,8 @@ class PatientForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+
+class BudgetForm(forms.ModelForm):
+    class Meta:
+        model = Budget
+        fields = ['treatment', 'cost', 'is_paid', 'is_completed']

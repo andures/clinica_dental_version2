@@ -51,6 +51,9 @@
                         <a href="{% url 'patient_delete' patient.pk %}" class="text-red-500 hover:text-red-400 transition-colors">
                             Eliminar
                         </a>
+                        <a href="{% url 'budget_list' patient.pk %}" class="text-dental-green hover:text-dental-green/80 transition-colors">
+                            Presupuesto
+                        </a>
                     </td>
                 </tr>
                 {% empty %}

@@ -27,57 +27,68 @@
             </div>
         </div>
     </div>
+    <div class="grid gap-6 sm:grid-cols-2">
+        <!-- Calendario -->
+        <div class="bg-gray-800 p-8 rounded-lg shadow-lg mb-8 w-full flex items-center flex-col">
+            <h2 class="text-xl font-semibold text-dental-blue mb-4">Calendario de Citas</h2>
+            <div class="flex justify-between items-center mb-4">
+                <button id="prevMonth" class="bg-dental-blue text-white px-4 py-2 rounded-lg hover:bg-dental-blue/80 transition-colors">Anterior</button>
+                <h3 id="calendarMonth" class="text-lg font-semibold text-gray-200"></h3>
+                <button id="nextMonth" class="bg-dental-blue text-white px-4 py-2 rounded-lg hover:bg-dental-blue/80 transition-colors">Siguiente</button>
+            </div>
+            <table id="calendar" class="table-auto w-full text-white rounded-lg shadow-lg bg-gray-600">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-2">Dom</th>
+                        <th class="px-4 py-2">Lun</th>
+                        <th class="px-4 py-2">Mar</th>
+                        <th class="px-4 py-2">Mié</th>
+                        <th class="px-4 py-2">Jue</th>
+                        <th class="px-4 py-2">Vie</th>
+                        <th class="px-4 py-2">Sáb</th>
+                    </tr>
+                </thead>
+                <tbody id="calendar-body">
+                    <!-- Las filas del calendario se generarán dinámicamente -->
+                </tbody>
+            </table>
+        </div>
 
-    <!-- Calendario -->
-    <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
-        <h2 class="text-xl font-semibold text-dental-blue mb-4">Calendario de Citas</h2>
-        <table id="calendar" class="table-auto w-full text-white">
-            <thead>
-                <tr>
-                    <th class="px-4 py-2">Dom</th>
-                    <th class="px-4 py-2">Lun</th>
-                    <th class="px-4 py-2">Mar</th>
-                    <th class="px-4 py-2">Mié</th>
-                    <th class="px-4 py-2">Jue</th>
-                    <th class="px-4 py-2">Vie</th>
-                    <th class="px-4 py-2">Sáb</th>
-                </tr>
-            </thead>
-            <tbody id="calendar-body">
-                <!-- Las filas del calendario se generarán dinámicamente -->
-            </tbody>
-        </table>
+        <!-- Próximas Citas -->
+        <div class="bg-gray-800 p-8 rounded-lg shadow-lg mb-8 w-full">
+            <h2 class="text-xl font-semibold text-dental-blue mb-4">Próximas Citas</h2>
+            <div class="max-h-64 overflow-y-auto">
+                <ul id="appointmentList">
+                    {% for appointment in upcoming_appointments %}
+                        <li class="mb-4">
+                            <div class="flex items-center justify-between rounded-lg p-4 bg-gray-700">
+                                <div class="w-4/5 grid gap-2 sm:grid-cols-2">
+                                    <p class="text-lg font-semibold text-gray-200">{{ appointment.patient.name }}</p>
+                                    <p class="text-sm text-gray-400">{{ appointment.appointment_date|date:"d/m/Y H:i" }}</p>
+                                    <p class="text-sm text-gray-400">{{ appointment.patient.email }}</p>
+                                    <p class="text-sm text-gray-400">{{ appointment.reason }}</p>
+                                </div>
+                                <a href="#" class="text-dental-blue hover:text-dental-blue/80 transition-colors">Ver Detalles</a>
+                            </div>
+                        </li>
+                    {% empty %}
+                        <li class="text-gray-400">No hay próximas citas.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
     </div>
-
-    <!-- Próximas Citas -->
-    <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-        <h2 class="text-xl font-semibold text-dental-blue mb-4">Próximas Citas</h2>
-        <ul id="appointmentList">
-            {% for appointment in upcoming_appointments %}
-                <li class="mb-4">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-lg font-semibold text-gray-200">{{ appointment.patient.name }}</p>
-                            <p class="text-sm text-gray-400">{{ appointment.appointment_date|date:"d/m/Y H:i" }}</p>
-                        </div>
-                        <a href="#" class="text-dental-blue hover:text-dental-blue/80 transition-colors">Ver Detalles</a>
-                    </div>
-                </li>
-            {% empty %}
-                <li class="text-gray-400">No hay próximas citas.</li>
-            {% endfor %}
-        </ul>
-    </div>
+    
 
     <!-- Gráficos -->
     <div class="bg-gray-800 p-6 rounded-lg shadow-lg mt-8">
         <h2 class="text-xl font-semibold text-dental-blue mb-4">Métricas</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-                <canvas id="appointmentsChart"></canvas>
+                <canvas id="appointmentsChart" class="w-full h-64"></canvas>
             </div>
             <div>
-                <canvas id="patientsChart"></canvas>
+                <canvas id="appointmentTypesChart" class="w-full h-64"></canvas>
             </div>
         </div>
     </div>
@@ -85,19 +96,28 @@
 
 <script>
     const appointments = JSON.parse('{{ upcoming_appointments_json|escapejs }}');
+    const appointmentsData = JSON.parse('{{ appointments_data|escapejs }}');
+    const appointmentTypesLabels = JSON.parse('{{ appointment_types_labels|escapejs }}');
+    const appointmentTypesData = JSON.parse('{{ appointment_types_data|escapejs }}');
 </script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const calendarBody = document.getElementById('calendar-body');
         const appointmentList = document.getElementById('appointmentList');
+        const calendarMonth = document.getElementById('calendarMonth');
+        const prevMonthBtn = document.getElementById('prevMonth');
+        const nextMonthBtn = document.getElementById('nextMonth');
 
-        function generateCalendar() {
-            const today = new Date();
-            const month = today.getMonth();
-            const year = today.getFullYear();
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+
+        function generateCalendar(month, year) {
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            calendarMonth.textContent = `${monthNames[month]} ${year}`;
 
             calendarBody.innerHTML = '';
             let row = document.createElement('tr');
@@ -117,6 +137,13 @@
                 const dayCell = document.createElement('td');
                 dayCell.classList.add('px-4', 'py-2', 'bg-gray-700', 'text-center', 'cursor-pointer', 'hover:bg-gray-600');
                 dayCell.textContent = day;
+
+                // Marcar días con citas
+                const hasAppointments = appointments.some(appointment => appointment.date === dateStr);
+                if (hasAppointments) {
+                    dayCell.classList.add('bg-dental-blue');
+                }
+
                 dayCell.addEventListener('click', () => showAppointments(dateStr));
                 row.appendChild(dayCell);
             }
@@ -153,11 +180,29 @@
             }
         }
 
-        generateCalendar();
+        prevMonthBtn.addEventListener('click', () => {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            generateCalendar(currentMonth, currentYear);
+        });
+
+        nextMonthBtn.addEventListener('click', () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            generateCalendar(currentMonth, currentYear);
+        });
+
+        generateCalendar(currentMonth, currentYear);
 
         // Gráficos
         const ctxAppointments = document.getElementById('appointmentsChart').getContext('2d');
-        const ctxPatients = document.getElementById('patientsChart').getContext('2d');
+        const ctxAppointmentTypes = document.getElementById('appointmentTypesChart').getContext('2d');
 
         const appointmentsChart = new Chart(ctxAppointments, {
             type: 'line',
@@ -165,7 +210,7 @@
                 labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
                 datasets: [{
                     label: 'Citas',
-                    data: [12, 19, 3, 5, 2, 3, 10, 15, 8, 12, 7, 14],
+                    data: appointmentsData,
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                     borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 1
@@ -180,22 +225,45 @@
             }
         });
 
-        const patientsChart = new Chart(ctxPatients, {
-            type: 'bar',
+        const appointmentTypesChart = new Chart(ctxAppointmentTypes, {
+            type: 'pie',
             data: {
-                labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                labels: appointmentTypesLabels,
                 datasets: [{
-                    label: 'Pacientes Nuevos',
-                    data: [5, 10, 8, 6, 7, 9, 12, 15, 10, 8, 6, 9],
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
+                    label: 'Tipos de Citas',
+                    data: appointmentTypesData,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
                     borderWidth: 1
                 }]
             },
             options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw;
+                            }
+                        }
                     }
                 }
             }

@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from multiselectfield import MultiSelectField
+from django.utils import timezone
+
 # Create your models here.
 class Patient(models.Model):
     # Datos Generales
@@ -135,6 +137,10 @@ class Patient(models.Model):
     diagnosis = models.TextField(default='', verbose_name="Diagnóstico", null=True, blank=True)
     treatment_plan = models.TextField(default='', verbose_name="Plan de Tratamiento", null=True, blank=True)
 
+    @property
+    def next_appointment_date(self):
+        return self.appointment.filter(appointment_date_gte=timezone.now()).order_by('appointment_date').first()
+    
     def __str__(self):
         return self.name
 
@@ -149,6 +155,19 @@ class Appointment(models.Model):
     def save(self, *args, **kwargs):
         self.email = self.patient.email
         super(Appointment, self).save(*args, **kwargs)
+        self.patient.next_appointment = self.patient.next_appointment_date
+        self.patient.save()
         
     def __str__(self):
         return f"{self.patient.name} - {self.appointment_date} {self.time}"
+
+class Budget(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    treatment = models.TextField(verbose_name="Tratamiento")
+    cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Costo")
+    is_paid = models.BooleanField(default=False, verbose_name="¿Está pagado?")
+    is_completed = models.BooleanField(default=False, verbose_name="¿Está completado?")
+    date_created = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Creación")
+
+    def __str__(self):
+        return f"{self.patient.name} - {self.treatment} - {self.cost}"

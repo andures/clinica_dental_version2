@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from .forms import AppointmentForm , PatientForm
+from .forms import AppointmentForm , PatientForm , BudgetForm
 from django.contrib.auth.decorators import login_required
-from .models import Patient, Appointment
+from .models import Patient, Appointment , Budget
 from django.utils import timezone
 import json
 from django.http import JsonResponse
+from django.db.models import Count , Sum
 
 # Create your views here.
 def home(request):
@@ -101,17 +102,35 @@ def dashboard(request):
         {
             'patient': appointment.patient.name,
             'date': appointment.appointment_date.strftime('%Y-%m-%d'),
-            'time': appointment.time.strftime('%H:%M'),
+            'time': appointment.appointment_date.strftime('%H:%M'),
             'reason': appointment.reason
         }
         for appointment in upcoming_appointments
     ])
+
+    # Obtener datos para los gráficos
+    appointments_by_month = Appointment.objects.filter(patient__dentist=request.user).extra(select={'month': "strftime('%%m', appointment_date)"}).values('month').annotate(count=Count('id')).order_by('month')
+    appointment_types = Appointment.objects.filter(patient__dentist=request.user).values('reason').annotate(count=Count('id')).order_by('-count')
+
+    appointments_data = [0] * 12
+    appointment_types_data = []
+    appointment_types_labels = []
+
+    for item in appointments_by_month:
+        appointments_data[int(item['month']) - 1] = item['count']
+
+    for item in appointment_types:
+        appointment_types_labels.append(item['reason'])
+        appointment_types_data.append(item['count'])
 
     context = {
         'total_patients': total_patients,
         'total_appointments': total_appointments,
         'upcoming_appointments': upcoming_appointments,
         'upcoming_appointments_json': upcoming_appointments_json,
+        'appointments_data': json.dumps(appointments_data),
+        'appointment_types_labels': json.dumps(appointment_types_labels),
+        'appointment_types_data': json.dumps(appointment_types_data),
     }
     return render(request, 'appointments/dashboard.html', context)
 
@@ -188,3 +207,54 @@ def appointment_delete(request, pk):
         appointment.delete()
         return redirect('appointments_list')
     return render(request, 'appointments/appointment_confirm_delete.html', {'appointment': appointment})
+
+@login_required
+def budget_list(request, patient_id):
+    patient = get_object_or_404(Patient, pk=patient_id, dentist=request.user)
+    budgets = Budget.objects.filter(patient=patient)
+
+    if request.method == 'POST':
+        budget_id = request.POST.get('budget_id')
+        if budget_id:
+            budget = get_object_or_404(Budget, pk=budget_id, patient=patient)
+            form = BudgetForm(request.POST, instance=budget)
+        else:
+            form = BudgetForm(request.POST)
+        
+        if form.is_valid():
+            budget = form.save(commit=False)
+            budget.patient = patient
+            budget.save()
+            return redirect('budget_list', patient_id=patient.id)
+    else:
+        form = BudgetForm()
+
+    total_cost = budgets.aggregate(total=Sum('cost'))['total'] or 0
+
+    return render(request, 'appointments/budget_list.html', {
+        'patient': patient,
+        'budgets': budgets,
+        'form': form,
+        'total_cost': total_cost
+    })
+from django.http import JsonResponse
+
+@login_required
+def get_budget(request, pk):
+    budget = get_object_or_404(Budget, pk=pk, patient__dentist=request.user)
+    data = {
+        'id': budget.id,
+        'treatment': budget.treatment,
+        'cost': budget.cost,
+        'is_paid': budget.is_paid,
+        'is_completed': budget.is_completed,
+    }
+    return JsonResponse(data)
+
+@login_required
+def budget_delete(request, pk):
+    budget = get_object_or_404(Budget, pk=pk, patient__dentist=request.user)
+    if request.method == 'POST':
+        budget.delete()
+        return redirect('budget_list', patient_id=budget.patient.id)
+    return render(request, 'appointments/budget_confirm_delete.html', {'budget': budget})
