@@ -151,6 +151,7 @@ class Appointment(models.Model):
     reason = models.TextField()
     dentist = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     email = models.EmailField(default='', verbose_name="Correo Electrónico", null=True, blank=True)
+    is_completed = models.BooleanField(default=False, verbose_name="¿Está completado?")
 
     def save(self, *args, **kwargs):
         self.email = self.patient.email

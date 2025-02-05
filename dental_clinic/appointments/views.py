@@ -8,6 +8,7 @@ from django.utils import timezone
 import json
 from django.http import JsonResponse
 from django.db.models import Count , Sum
+from datetime import timedelta
 
 # Create your views here.
 def home(request):
@@ -94,8 +95,24 @@ def patient_delete(request, pk):
 # dashboard view
 @login_required
 def dashboard(request):
+    today = timezone.now().date()
+    start_of_week = today - timedelta(days=today.weekday())
+    start_of_month = today.replace(day=1)
+
     total_patients = Patient.objects.filter(dentist=request.user).count()
     total_appointments = Appointment.objects.filter(patient__dentist=request.user).count()
+    next_appointment = Appointment.objects.filter(patient__dentist=request.user, appointment_date__gte=timezone.now()).order_by('appointment_date').first()
+
+    if next_appointment:
+        next_appointment_date = next_appointment.appointment_date
+        total_patients_today = Patient.objects.filter(dentist=request.user, appointments__appointment_date=next_appointment_date).count()
+        total_patients_week = Patient.objects.filter(dentist=request.user, appointments__appointment_date__gte=start_of_week, appointments__appointment_date__lte=next_appointment_date).count()
+        total_patients_month = Patient.objects.filter(dentist=request.user, appointments__appointment_date__gte=start_of_month, appointments__appointment_date__lte=next_appointment_date).count()
+    else:
+        total_patients_today = 0
+        total_patients_week = 0
+        total_patients_month = 0
+
     upcoming_appointments = Appointment.objects.filter(patient__dentist=request.user, appointment_date__gte=timezone.now()).order_by('appointment_date')[:5]
 
     upcoming_appointments_json = json.dumps([
@@ -125,7 +142,11 @@ def dashboard(request):
 
     context = {
         'total_patients': total_patients,
+        'total_patients_today': total_patients_today,
+        'total_patients_week': total_patients_week,
+        'total_patients_month': total_patients_month,
         'total_appointments': total_appointments,
+        'next_appointment': next_appointment,
         'upcoming_appointments': upcoming_appointments,
         'upcoming_appointments_json': upcoming_appointments_json,
         'appointments_data': json.dumps(appointments_data),

@@ -64,7 +64,7 @@
                             <div class="flex items-center justify-between rounded-lg p-4 bg-gray-700">
                                 <div class="w-4/5 grid gap-2 sm:grid-cols-2">
                                     <p class="text-lg font-semibold text-gray-200">{{ appointment.patient.name }}</p>
-                                    <p class="text-sm text-gray-400">{{ appointment.appointment_date|date:"d/m/Y H:i" }}</p>
+                                    <p class="text-sm text-gray-400">{{ appointment.appointment_date|date:"d/m/Y" }} {{ appointment.appointment_date|time:"H:i" }}</p>
                                     <p class="text-sm text-gray-400">{{ appointment.patient.email }}</p>
                                     <p class="text-sm text-gray-400">{{ appointment.reason }}</p>
                                 </div>

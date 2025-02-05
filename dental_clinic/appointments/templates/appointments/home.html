@@ -1,73 +1,101 @@
-{%  extends 'appointments/base.html' %}
-{% block title %}Home{% endblock %}
+{% extends 'appointments/base.html' %}
+{% block title %}Inicio{% endblock %}
 {% load static %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'appointments/css/home.css' %}">
-     <!-- Hero Section -->
-     <section class="hero bg-gray-800 text-white h-screen flex flex-col justify-center items-center text-center px-6 py-12">
-        <h1 class="text-4xl font-bold leading-tight mb-4">Welcome to Our Dental Clinic</h1>
-        <p class="text-xl mb-6">We provide quality dental care with a personal touch. Book your appointment today!</p>
 
-        {% if user.is_authenticated %}
-            <p class="text-lg">Hello, {{ user.username }}! Ready for your next appointment?</p>
-            <a href="{% url 'patients_list' %}" class="mt-4 inline-block px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">Pacientes</a>
-            <a href="{% url 'appointments_list' %}" class="mt-4 inline-block px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">Citas</a>
-            <a href="{% url 'dashboard' %}" class="mt-4 inline-block px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">Dashboard</a>
-        {% else %}
-            <p class="text-lg">Create an account and start your journey to a better smile.</p>
-            <a href="{% url 'register' %}" class="mt-4 inline-block px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Sign Up</a>
-        {% endif %}
-    </section>
-
-    <!-- Information Cards Section -->
-    <section class="bg-gray-900 py-16">
-        <div class="container mx-auto text-center px-6">
-            <h2 class="text-3xl font-semibold text-white mb-8">Our Services</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Service Card 1 -->
-                <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-                    <h3 class="text-xl text-blue-400 font-semibold mb-4">General Dentistry</h3>
-                    <p class="text-white">Comprehensive dental care for your entire family. From routine checkups to more advanced procedures.</p>
-                </div>
-
-                <!-- Service Card 2 -->
-                <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-                    <h3 class="text-xl text-blue-400 font-semibold mb-4">Cosmetic Dentistry</h3>
-                    <p class="text-white">Enhance your smile with treatments like teeth whitening, veneers, and more.</p>
-                </div>
-
-                <!-- Service Card 3 -->
-                <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-                    <h3 class="text-xl text-blue-400 font-semibold mb-4">Orthodontics</h3>
-                    <p class="text-white">Braces and aligners to help you achieve a straighter, more confident smile.</p>
-                </div>
+<!-- Hero Section -->
+<section id="home" class="pt-24 bg-gradient-to-r from-dental-blue to-dental-blue-light">
+    <div class="container mx-auto px-6 py-16">
+        <div class="flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2">
+                <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">Tu Sonrisa, Nuestra Prioridad</h1>
+                <p class="text-xl text-gray-200 mb-8">Organiza tus citas y gestiona tus clientes con nuestro sistema</p>
+                <a href="{% url 'appointments_list' %}" class="bg-red-800 text-white px-8 py-3 rounded-lg hover:bg-red-600 transition duration-300">Reservar Cita Ahora</a>
+            </div>
+            <div class="md:w-1/2 mt-8 md:mt-0">
+                <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-1.2.1" alt="Interior de la Clínica Dental" class="rounded-lg shadow-xl">
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Testimonials Section -->
-    <section class="bg-gray-800 py-16">
-        <div class="container mx-auto text-center px-6">
-            <h2 class="text-3xl font-semibold text-white mb-8">What Our Patients Say</h2>
-            <div class="flex justify-center space-x-6">
-                <!-- Testimonial 1 -->
-                <div class="bg-gray-900 p-6 rounded-lg shadow-lg max-w-xs">
-                    <p class="text-white mb-4">"Great service and friendly staff!"</p>
-                    <p class="text-blue-400 font-semibold">- John Doe</p>
-                </div>
-                <!-- Testimonial 2 -->
-                <div class="bg-gray-900 p-6 rounded-lg shadow-lg max-w-xs">
-                    <p class="text-white mb-4">"I love my new smile!"</p>
-                    <p class="text-blue-400 font-semibold">- Jane Smith</p>
+<!-- Services Section -->
+<section id="services" class="py-16 bg-white">
+    <div class="container mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center mb-12 text-black">Nuestros Servicios</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+                <div class="text-dental-blue text-4xl mb-4">📋</div>
+                <h3 class="text-xl font-semibold mb-2 text-black">Gestión de Pacientes</h3>
+                <p class="text-gray-600 mb-4">Administra la información de tus pacientes de manera eficiente</p>
+            </div>
+            <div class="p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+                <div class="text-dental-blue text-4xl mb-4">📅</div>
+                <h3 class="text-xl font-semibold mb-2 text-black">Gestión de Citas</h3>
+                <p class="text-gray-600 mb-4">Organiza y gestiona las citas de tus pacientes fácilmente</p>
+            </div>
+            <div class="p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+                <div class="text-dental-blue text-4xl mb-4">💰</div>
+                <h3 class="text-xl font-semibold mb-2 text-black">Presupuesto</h3>
+                <p class="text-gray-600 mb-4">Genera y gestiona los presupuestos de tratamientos dentales</p>
+            </div>
+            <!-- Más tarjetas de servicios... -->
+        </div>
+    </div>
+</section>
+
+<!-- Booking Section -->
+<section id="booking" class="py-16 bg-dental-blue-light">
+    <div class="container mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center mb-12 text-white">Reserva Tu Cita</h2>
+        <form class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg">
+            <div class="mb-6">
+                <input type="text" placeholder="Nombre Completo" class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-dental-blue">
+            </div>
+            <div class="mb-6">
+                <input type="tel" placeholder="Número de Teléfono" class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-dental-blue">
+            </div>
+            <div class="mb-6">
+                <input type="email" placeholder="Correo Electrónico" class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-dental-blue">
+            </div>
+            <button type="submit" class="w-full bg-dental-blue-dark text-white py-3 rounded-lg hover:bg-dental-blue transition duration-300">Enviar Cita</button>
+        </form>
+    </div>
+</section>
+
+<!-- Dentists Section -->
+<section id="dentists" class="py-16 bg-white">
+    <div class="container mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center mb-12 text-black">Nuestros Dentistas Expertos</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300">
+                <img src="https://images.unsplash.com/photo-1537368910025-700350fe46c7?ixlib=rb-1.2.1" alt="Dra. Sarah Johnson" class="w-full h-64 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-2 text-black">Dra. Sarah Johnson</h3>
+                    <p class="text-gray-600 mb-4">Especialista en Ortodoncia</p>
+                    <p class="text-sm text-gray-500">Más de 15 años de experiencia</p>
                 </div>
             </div>
+            <!-- Más perfiles de dentistas... -->
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Call to Action Section -->
-    <section class="bg-blue-500 text-white py-12 text-center">
-        <h2 class="text-3xl font-semibold mb-4">Ready to Smile Again?</h2>
-        <p class="mb-6">Contact us today to schedule your appointment and experience exceptional dental care!</p>
-        <a href="{% url 'appointments_list' %}" class="inline-block px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Book Your Appointment</a>
-    </section>
+<!-- Contact Section -->
+<section id="contact" class="py-16 bg-gray-50">
+    <div class="container mx-auto px-6">
+        <div class="flex flex-col md:flex-row gap-12">
+            <div class="md:w-1/2">
+                <h2 class="text-3xl font-bold mb-8 text-black">Contáctanos</h2>
+                <div class="space-y-4 text-black">
+                    <p class="flex items-center"><span class="text-dental-blue mr-3">📍</span> Calle Dental 123, Ciudad, País</p>
+                    <p class="flex items-center"><span class="text-dental-blue mr-3">📞</span> +1 234 567 890</p>
+                    <p class="flex items-center"><span class="text-dental-blue mr-3">✉️</span> info@dentalcare.com</p>
+                </div>
+            </div>
+            <div class="md:w-1/2 h-96 bg-gray-200 rounded-lg"><!-- Map placeholder --></div>
+        </div>
+    </div>
+</section>
 {% endblock %}
