@@ -13,6 +13,16 @@
             Crear Nueva Cita
         {% endif %}
     </h1>
+    <!-- Mostrar mensajes -->
+    {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+                <div class="p-4 mb-4 text-sm {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
     <form method="post" action="" class="bg-gray-800 p-8 rounded-lg shadow-lg">
         {% csrf_token %}
         <div class="grid gap-6 sm:grid-cols-2">
@@ -42,6 +52,10 @@
                     <div class="w-full">
                         <label for="{{ form.new_patient_phone.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Teléfono del Nuevo Paciente</label>
                         {% render_field form.new_patient_phone class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
+                    </div>
+                    <div class="w-full">
+                        <label for="{{ form.new_patient_age.id_for_label }}" class="block mb-2 text-sm font-medium text-white">Edad del Nuevo Paciente</label>
+                        {% render_field form.new_patient_age class+="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" %}
                     </div>
                 </div>
             </div>

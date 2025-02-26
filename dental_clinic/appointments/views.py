@@ -9,6 +9,7 @@ import json
 from django.http import JsonResponse
 from django.db.models import Count , Sum
 from datetime import timedelta
+from django.contrib import messages
 
 # Create your views here.
 def home(request):
@@ -119,7 +120,7 @@ def dashboard(request):
         {
             'patient': appointment.patient.name,
             'date': appointment.appointment_date.strftime('%Y-%m-%d'),
-            'time': appointment.appointment_date.strftime('%H:%M'),
+            'time': appointment.time.strftime('%H:%M'),
             'reason': appointment.reason
         }
         for appointment in upcoming_appointments
@@ -161,23 +162,38 @@ def appointment_create(request):
     if request.method == 'POST':
         form = AppointmentForm(request.POST)
         if form.is_valid():
-            if form.cleaned_data['new_patient_name']:
-                # Crear un nuevo paciente
-                patient = Patient.objects.create(
-                    name=form.cleaned_data['new_patient_name'],
-                    email=form.cleaned_data['new_patient_email'],
-                    phone=form.cleaned_data['new_patient_phone'],
-                    age=form.cleaned_data['new_patient_age'],
-                    dentist=request.user
-                )
-            else:
-                # Usar un paciente existente
-                patient = form.cleaned_data['patient']
-            
-            appointment = form.save(commit=False)
-            appointment.patient = patient
-            appointment.save()
-            return redirect('appointments_list')
+            try:
+                if form.cleaned_data.get('new_patient_name'):
+                    # Crear un nuevo paciente
+                    print("Creando un nuevo paciente con los siguientes datos:")
+                    print(f"Nombre: {form.cleaned_data['new_patient_name']}")
+                    print(f"Email: {form.cleaned_data['new_patient_email']}")
+                    print(f"Teléfono: {form.cleaned_data['new_patient_phone']}")
+                    print(f"Edad: {form.cleaned_data['new_patient_age']}")
+                    
+                    patient = Patient.objects.create(
+                        name=form.cleaned_data['new_patient_name'],
+                        email=form.cleaned_data['new_patient_email'],
+                        phone=form.cleaned_data['new_patient_phone'],
+                        age=form.cleaned_data['new_patient_age'],
+                        dentist=request.user
+                    )
+                    print(f"Paciente creado: {patient}")
+                else:
+                    # Usar un paciente existente
+                    patient = form.cleaned_data['patient']
+                
+                appointment = form.save(commit=False)
+                appointment.patient = patient
+                appointment.save()
+                messages.success(request, 'La cita se ha creado correctamente.')
+                return redirect('appointments_list')
+            except Exception as e:
+                print(f'Error al guardar la cita: {e}')  # Imprimir el error en la consola
+                messages.error(request, f'Error al guardar la cita: {e}')
+        else:
+            print(f'Errores del formulario: {form.errors}')  # Imprimir los errores del formulario en la consola
+            messages.error(request, 'El formulario no es válido. Por favor, revisa los datos ingresados.')
     else:
         form = AppointmentForm()
     return render(request, 'appointments/appointment_form.html', {'form': form})

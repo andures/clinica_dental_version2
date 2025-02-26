@@ -138,8 +138,9 @@ class Patient(models.Model):
     treatment_plan = models.TextField(default='', verbose_name="Plan de Tratamiento", null=True, blank=True)
 
     @property
-    def next_appointment(self):
-        return self.appointments.filter(appointment_date__gte=timezone.now()).order_by('appointment_date').first()
+    def next_appointment_date(self):
+        next_appointment = self.appointments.filter(appointment_date__gte=timezone.now()).order_by('appointment_date').first()
+        return next_appointment.appointment_date if next_appointment else None
     
     def __str__(self):
         return self.name
@@ -151,7 +152,6 @@ class Appointment(models.Model):
     reason = models.TextField()
     dentist = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     email = models.EmailField(default='', verbose_name="Correo Electrónico", null=True, blank=True)
-    is_completed = models.BooleanField(default=False, verbose_name="¿Está completado?")
 
     def save(self, *args, **kwargs):
         self.email = self.patient.email
